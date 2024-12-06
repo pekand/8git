@@ -86,7 +86,7 @@ namespace _8Git.Forms
         private void FormNote_FormClosing(object sender, FormClosingEventArgs e)
         {
             node.content = textEditor.Text;
-            Program.form8Git.CloseNode(this.node);
+            Program.form8Git.CloseNote(this.node);
         }
 
     }

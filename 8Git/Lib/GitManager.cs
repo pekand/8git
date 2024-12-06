@@ -46,15 +46,14 @@ namespace _8Git.Lib
 
         public void InitRepository(TreeData node)
         {
-            if (node.isRepository && Directory.Exists(node.path))
+            if (node.isRepository && Directory.Exists(node.path) && node.directoryMonitor == null)
             {
                 Program.message("REPOSITORY INIT:"+ node.path);
                 CheckRepositorieState(node);
                 node.directoryMonitor = new DirectoryMonitor(node.path);
                 node.directoryMonitor.OnChange += (changedPath) =>
-                {
-                    
-                RepositoryChange(node);
+                {  
+                    RepositoryChange(node);
                 };
 
             }
@@ -75,7 +74,7 @@ namespace _8Git.Lib
         }
 
         public void AddRepository(TreeData node) {
-            if (node.isRepository) {
+            if (node.isRepository && !repositories.ContainsKey(node.Id)) {
                 repositories.Add(node.Id, node);
                 this.InitRepository(node);
             }

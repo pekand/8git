@@ -20,6 +20,8 @@ namespace _8Git
 
         public static Form8Git form8Git = null;
 
+        public static Dictionary<string, FormNote> noteForms = new Dictionary<string, FormNote>();
+
         public static Tree tree;
 
         public static GitManager gitManager;
@@ -93,6 +95,14 @@ namespace _8Git
             return true;
         }
 
+        public static void CloseAllNoteForms()
+        {
+            foreach (var form in noteForms) {
+                form.Value.Close();
+            }
+            noteForms.Clear();
+        }
+
         [STAThread]
         static void Main(string[] args)
         {
@@ -130,8 +140,7 @@ namespace _8Git
 
             if (!Common.createMutex(path))
             {
-                PipeServer.SendMessage("Second instance run");
-                Thread.Sleep(1000);
+                PipeServer.SendMessageAsync("Second instance run");
                 return;
             }
 

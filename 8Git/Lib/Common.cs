@@ -67,6 +67,7 @@ namespace _8Git
         {
             return Guid.NewGuid().ToString();
         }
+
         public static bool IsGuid(string input)
         {
             string pattern = @"^[{(]?[0-9a-fA-F]{8}(-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}[)}]?$";

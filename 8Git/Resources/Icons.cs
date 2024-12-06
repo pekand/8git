@@ -11,8 +11,64 @@ namespace _8Git
 {
     public class Icons
     {
+        public static Icon root = null;
+        public static Icon folder = null;
+        public static Icon directory = null;
+        public static Icon file = null;
+        public static Icon note = null;
+        public static Icon url = null;
+        public static Icon command = null;
+        public static Icon repository = null;
+        public static Icon repositoryChange = null;
+        public static ImageList imageList;
+
+
         public static List<Icon> allIcons = new List<Icon>();
         public static List<Bitmap> allBitmaps = new List<Bitmap>();
+
+        public static ImageList GetImageList()
+        {
+
+            if (imageList != null)
+            {
+                return imageList;
+            }
+
+            imageList = new ImageList
+            {
+                ImageSize = new System.Drawing.Size(32, 32)
+            };
+
+            root = Icons.CreateUnicodeIcon("❽", "#000000", "", 32);
+            imageList.Images.Add("root", root);
+
+            folder = Icons.CreateUnicodeIcon("📁", "#000000", "", 32);
+            imageList.Images.Add("folder", folder);
+
+            directory = Icons.CreateUnicodeIcon("📂", "#000000", "", 32);
+            imageList.Images.Add("directory", directory);
+
+            file = Icons.CreateUnicodeIcon("📄", "#000000", "", 32);
+            imageList.Images.Add("file", file);
+
+            //✅❎⬡⭐
+            note = Icons.CreateUnicodeIcon("📒", "#000000", "", 32);
+            imageList.Images.Add("note", note);
+
+            url = Icons.CreateUnicodeIcon("⚓", "#000000", "", 32);
+            imageList.Images.Add("url", url);
+
+            command = Icons.CreateUnicodeIcon("⚠", "#000000", "", 32);
+            imageList.Images.Add("command", command);
+
+            repository = Icons.CreateUnicodeIcon("📦", "#000000", "", 32);
+            imageList.Images.Add("repository", repository);
+
+            repositoryChange = Icons.CreateUnicodeIcon("📦", "#FF0000", "", 32);
+            imageList.Images.Add("repositoryChange", repositoryChange);
+
+            return imageList;
+        }
 
         public static Icon CreateCircleIcon(string color, int width, int height)
         {
