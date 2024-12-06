@@ -1126,19 +1126,16 @@ namespace _8Git
                     node.Value.node = treeNode;
                     treeNode.Tag = node.Value;
 
-                    string type = "FOLDER";
                     treeNode.ImageKey = "folder";
                     treeNode.SelectedImageKey = "folder";
 
-                    if (node.Value.isRoot) {
-                        type = "FOLDER";                        
+                    if (node.Value.isRoot) {                      
                         rootNode = node.Value;
                         node.Value.isRoot = false;
                     }
 
                     if (node.Value.isFile)
                     {
-                        type = "FILE";
                         rootNode = node.Value;
                         treeNode.ImageKey = "file";
                         treeNode.SelectedImageKey = "file";
@@ -1146,7 +1143,6 @@ namespace _8Git
 
                     if (node.Value.isDirectory)
                     {
-                        type = "DIRECTORY";
                         rootNode = node.Value;
                         treeNode.ImageKey = "directory";
                         treeNode.SelectedImageKey = "directory";
@@ -1154,21 +1150,18 @@ namespace _8Git
 
                     if (node.Value.isNote)
                     {
-                        type = "NOTE";
                         treeNode.ImageKey = "note";
                         treeNode.SelectedImageKey = "note";
                     }
 
                     if (node.Value.isUrl)
                     {
-                        type = "URL";
                         treeNode.ImageKey = "url";
                         treeNode.SelectedImageKey = "url";
                     }
 
                     if (node.Value.isCommand)
                     {
-                        type = "COMMAND";
                         treeNode.ImageKey = "command";
                         treeNode.SelectedImageKey = "command";
                     }
@@ -1176,7 +1169,6 @@ namespace _8Git
                     if (node.Value.isRepository)
                     {
                         repositories[node.Value.Id] = node.Value;
-                        type = "REPOSITORY";
                         treeNode.ImageKey = "repository";
                         treeNode.SelectedImageKey = "repository";
                     }

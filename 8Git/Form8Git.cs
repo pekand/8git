@@ -962,7 +962,7 @@ namespace _8Git
         public void ToggleMostTop()
         {
             this.TopMost = !this.TopMost;
-            contextMenuItems["TopMost"].Checked = this.TopMost;
+            contextMenuItems["/Options/Most top"].Checked = this.TopMost;
         }
 
         // CONTEXTMENU CLOSE

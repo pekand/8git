@@ -140,7 +140,7 @@ namespace _8Git
 
             if (!Common.createMutex(path))
             {
-                PipeServer.SendMessageAsync("Second instance run");
+                PipeServer.SendMessage("Second instance run");
                 return;
             }
 

@@ -94,24 +94,6 @@ namespace _8Git
 
             try
             {
-                /*var buffer = new byte[1024];
-                int bytesRead;
-
-                // Continuously read from the pipe until the client disconnects
-                while ((bytesRead = await pipeServer.ReadAsync(buffer, 0, buffer.Length)) > 0)
-                {
-                    string message = Encoding.UTF8.GetString(buffer, 0, bytesRead);
-                    MessageReceived?.Invoke(message);
-                }*/
-
-                /*using (var reader = new StreamReader(pipeServer))
-                using (var writer = new StreamWriter(pipeServer) { AutoFlush = true })
-                {
-                    string clientMessage = await reader.ReadLineAsync();
-                    await writer.WriteLineAsync($"Message received: {clientMessage}");
-                    
-                }*/
-
                 using (var reader = new StreamReader(pipeServer))
                 using (var writer = new StreamWriter(pipeServer) { AutoFlush = true })
                 {
@@ -136,14 +118,14 @@ namespace _8Git
 
             }
 
-            Task.Run(async () =>
+            Task.Run(() =>
             {
-                await PipeServer.SendMessage(message);
+                PipeServer.SendMessage(message);
 
             });
         }
 
-        public static async System.Threading.Tasks.Task SendMessage(string message)
+        public static void SendMessage(string message)
         {
             if (PipeName == null)
             {
@@ -155,11 +137,7 @@ namespace _8Git
             {
                 using (var pipeClient = new NamedPipeClientStream(".", PipeName, PipeDirection.InOut, PipeOptions.Asynchronous))
                 {
-                    /*await pipeClient.ConnectAsync();
-                    byte[] messageBytes = Encoding.UTF8.GetBytes(message);
-                    await pipeClient.WriteAsync(messageBytes, 0, messageBytes.Length);*/
-
-                    await pipeClient.ConnectAsync();
+                    pipeClient.Connect();
 
                     try
                     {
@@ -167,8 +145,8 @@ namespace _8Git
                         using (var writer = new StreamWriter(pipeClient) { AutoFlush = true })
                         {
                             string messageToSend = message;
-                            await writer.WriteLineAsync(messageToSend);
-                            string response = await reader.ReadLineAsync();
+                            writer.WriteLine(messageToSend);
+                            string response = reader.ReadLine();
                             Program.message($"{response}");
                         }
                     }
