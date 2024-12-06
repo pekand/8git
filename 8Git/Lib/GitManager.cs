@@ -39,6 +39,7 @@ namespace _8Git.Lib
         public TreeData CreateRepository(string name, string path)
         {
             TreeData node = Program.tree.CreateNode(name, null, "REPOSITORY");
+            node.path = path;
             repositories.Add(node.Id, node);
             this.InitRepository(node);
             return node;
