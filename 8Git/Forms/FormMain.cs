@@ -33,10 +33,7 @@ namespace _8Git
 
         private void FormMain_Load(object sender, EventArgs e)
         {
-            if (Program.form8Git.FormVisible)
-            {
-                Program.form8Git.Show();
-            }
+
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -47,13 +44,18 @@ namespace _8Git
 
         private void notifyIcon_Click(object sender, EventArgs e)
         {
-            
+
         }
 
         private void showToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-                Program.form8Git.Show();
+
+            Program.form8Git.Show();
+        }
+
+        private void notifyIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }

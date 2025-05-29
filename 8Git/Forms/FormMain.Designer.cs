@@ -44,6 +44,7 @@
             notifyIcon.Text = "notifyIcon1";
             notifyIcon.Visible = true;
             notifyIcon.DoubleClick += showToolStripMenuItem_Click;
+            notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
             // 
             // contextMenuStripNotify
             // 

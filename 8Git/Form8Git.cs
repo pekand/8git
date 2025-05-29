@@ -3,8 +3,10 @@ using _8Git.Lib;
 using ICSharpCode.AvalonEdit.Editing;
 using Microsoft.VisualBasic.ApplicationServices;
 using Microsoft.VisualBasic.Logging;
+using Microsoft.Win32;
 using System;
 using System.Data.Common;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.IO;
@@ -672,6 +674,7 @@ namespace _8Git
 
             CreateContextmenuItem("/Options");
             CreateContextmenuItem("/Options/Most top", (s, e) => ToggleMostTop());
+            CreateContextmenuItem("/Options/Autorun", (s, e) => SetAutorun());
 
             CreateContextmenuItem("/Exit", (s, e) => CloseApplication(), Icons.CreateUnicodeImage("✖", "#FF0000", "", 32));
         }
@@ -723,6 +726,25 @@ namespace _8Git
             return contextMenuItems[child];
         }
 
+
+        public bool IsAutoRunEnabled()
+        {
+            string exePath = Process.GetCurrentProcess().MainModule.FileName;
+            string expectedValue = $"\"{exePath}\" --start-minimalized";
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", false))
+            {
+                if (key == null)
+                    return false;
+
+                object value = key.GetValue("8Git");
+                if (value == null)
+                    return false;
+
+                return value.ToString().Equals(expectedValue, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         // CONTEXTMENU
         public void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
@@ -734,6 +756,7 @@ namespace _8Git
             TreeData node = treeView.SelectedNode.Tag as TreeData;
 
             contextMenuItems["/Options/Most top"].Checked = this.TopMost;
+            contextMenuItems["/Options/Autorun"].Checked = this.IsAutoRunEnabled();
             contextMenuItems["/Node/Delete"].Visible = true;
             contextMenuItems["/Open"].Visible = false;
             contextMenuItems["/Repository"].Visible = false;
@@ -880,7 +903,7 @@ namespace _8Git
         // SAVE
         public void SaveAs()
         {
-            using (var saveFileDialog = new SaveFileDialog())
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
             {
                 saveFileDialog.Filter = "MtExpSolver Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
                 saveFileDialog.DefaultExt = "8Git";
@@ -897,7 +920,7 @@ namespace _8Git
         // OPEN
         public void Open()
         {
-            using (var openFileDialog = new OpenFileDialog())
+            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
             {
                 openFileDialog.Filter = "Text Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
                 openFileDialog.DefaultExt = "8Git";
@@ -958,11 +981,31 @@ namespace _8Git
             }
         }
 
-        // CONTEXTMENU FORM
+        // CONTEXTMENU Most top
         public void ToggleMostTop()
         {
             this.TopMost = !this.TopMost;
             contextMenuItems["/Options/Most top"].Checked = this.TopMost;
+        }
+
+        // CONTEXTMENU Autorun
+        public void SetAutorun()
+        {
+            string appName = "8Git"; // change as needed
+            string exePath = Process.GetCurrentProcess().MainModule.FileName;
+            string value = $"\"{exePath}\" --start-minimalized";
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
+                       @"Software\Microsoft\Windows\CurrentVersion\Run", true))
+            {
+                if (key == null) return;
+
+                object existing = key.GetValue(appName);
+                if (existing == null || !existing.ToString().Equals(value, StringComparison.OrdinalIgnoreCase))
+                {
+                    key.SetValue(appName, value);
+                }
+            }
         }
 
         // CONTEXTMENU CLOSE

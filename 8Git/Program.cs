@@ -107,8 +107,15 @@ namespace _8Git
         static void Main(string[] args)
         {
 
+            string[] appArgs = args;
+
 #if DEBUG
             AllocConsole();
+
+            if (args.Length == 0)
+            {
+                appArgs = new[] { "--start-minimalized"};
+            }
 #endif
 
             string path = "";
@@ -127,12 +134,19 @@ namespace _8Git
 
             path = Path.Combine(roamingPath, "config.8Git");
 
+            bool startminimalized = false;
 
-            if (args.Length > 0)
+            if (appArgs.Length > 0)
             {
-                foreach (var arg in args)
+                foreach (var arg in appArgs)
                 {
-                    path = arg;
+                    if (arg == "--start-minimalized") {
+                        startminimalized = true;
+                    } else 
+                    if (Directory.Exists(arg))
+                    {
+                        path = arg;
+                    }
                 }
             }
 
@@ -160,8 +174,14 @@ namespace _8Git
 
             formMain = new FormMain();
             gitManager = new GitManager();
-            form8Git = new Form8Git(path);                        
+            form8Git = new Form8Git(path);
+
             
+
+            if (Program.form8Git != null && !startminimalized)
+            {
+                Program.form8Git.Show();
+            }
 
             Application.Run(formMain);
 
