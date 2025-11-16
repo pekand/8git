@@ -1047,7 +1047,7 @@ namespace _8Git
                 {
                     //Common.OpenDirectoryInExplorer(node.path);
 
-                    if (!Command.OpenTortoiseGit(node.path))
+                    if (!Command.OpenTortoiseGit(node.path, "commit", true))
                     {
                         if (!Command.OpenPowershellTerminal(node.path))
                         {
