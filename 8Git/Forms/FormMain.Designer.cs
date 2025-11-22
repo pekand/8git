@@ -41,7 +41,7 @@
             // 
             notifyIcon.ContextMenuStrip = contextMenuStripNotify;
             notifyIcon.Icon = (Icon)resources.GetObject("notifyIcon.Icon");
-            notifyIcon.Text = "notifyIcon1";
+            notifyIcon.Text = "8Git";
             notifyIcon.Visible = true;
             notifyIcon.DoubleClick += showToolStripMenuItem_Click;
             notifyIcon.MouseDoubleClick += notifyIcon_MouseDoubleClick;
@@ -50,28 +50,28 @@
             // 
             contextMenuStripNotify.Items.AddRange(new ToolStripItem[] { showToolStripMenuItem, exitToolStripMenuItem });
             contextMenuStripNotify.Name = "contextMenuStripNotify";
-            contextMenuStripNotify.Size = new Size(112, 52);
+            contextMenuStripNotify.Size = new Size(115, 52);
             // 
             // showToolStripMenuItem
             // 
             showToolStripMenuItem.Name = "showToolStripMenuItem";
-            showToolStripMenuItem.Size = new Size(111, 24);
+            showToolStripMenuItem.Size = new Size(114, 24);
             showToolStripMenuItem.Text = "Show";
             showToolStripMenuItem.Click += showToolStripMenuItem_Click;
             // 
             // exitToolStripMenuItem
             // 
             exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            exitToolStripMenuItem.Size = new Size(111, 24);
+            exitToolStripMenuItem.Size = new Size(114, 24);
             exitToolStripMenuItem.Text = "Exit";
             exitToolStripMenuItem.Click += exitToolStripMenuItem_Click;
             // 
             // FormMain
             // 
-            AutoScaleDimensions = new SizeF(8F, 19F);
+            AutoScaleDimensions = new SizeF(8F, 20F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
-            ClientSize = new Size(100, 100);
+            ClientSize = new Size(100, 105);
             ContextMenuStrip = contextMenuStripNotify;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");

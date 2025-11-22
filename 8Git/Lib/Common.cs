@@ -165,11 +165,15 @@ namespace _8Git
 
             try
             {
+                var dir = Path.GetDirectoryName(filePath);
+
                 Process.Start(new ProcessStartInfo
                 {
                     FileName = filePath,
+                    WorkingDirectory = string.IsNullOrEmpty(dir) ? Environment.CurrentDirectory : dir,
                     UseShellExecute = true
                 });
+
                 Console.WriteLine($"Opened file: {filePath}");
             }
             catch (Exception ex)

@@ -94,24 +94,120 @@ namespace _8Git
             isPositionSet = true;
         }
 
-        // TIMER
-        public void timer_Tick(object sender, EventArgs e)
-        {
-            tick++;
-
-            if (tree.updated && (tick - lastSaveTick) > 120)
-            {
-                tree.SaveState();
-            }
-        }
-
-        // CLOSE
+        // EVENT FORM CLOSE
         public void Form8Git_FormClosed(object sender, FormClosedEventArgs e)
         {
             tree.SaveState();
         }
 
-        // MOUSE
+        // EVENT FORM RESIZE
+        public void Form8Git_Resize(object sender, EventArgs e)
+        {
+            if (isPositionSet)
+            {
+                if (this.WindowState == FormWindowState.Maximized ||
+                    this.WindowState == FormWindowState.Minimized)
+                {
+                    return;
+                }
+
+                FormX = this.Left;
+                FormY = this.Top;
+                FormW = this.Width;
+                FormH = this.Height;
+            }
+        }
+
+        // EVENT FORM MOVE
+        public void Form8Git_Move(object sender, EventArgs e)
+        {
+            if (isPositionSet)
+            {
+                if (this.WindowState == FormWindowState.Maximized ||
+                this.WindowState == FormWindowState.Minimized)
+                {
+                    return;
+                }
+
+                FormX = this.Left;
+                FormY = this.Top;
+                FormW = this.Width;
+                FormH = this.Height;
+            }
+        }
+
+        // EVENT FORM VISIBILE CHANGE
+        public void Form8Git_VisibleChanged(object sender, EventArgs e)
+        {
+            if (isPositionSet)
+            {
+                this.FormVisible = this.Visible;
+            }
+        }
+
+        // EVENT FORM CLOSING
+        public void Form8Git_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            if (e.CloseReason == CloseReason.UserClosing)
+            {
+                e.Cancel = true;
+                this.Hide();
+            }
+        }
+
+        /******************************************************************/
+
+        // FILE SAVE
+        public void Save()
+        {
+
+            if (tree.path == "")
+            {
+                this.SaveAs();
+            }
+            else
+            {
+                tree.SaveState();
+            }
+        }
+
+        // FILE SAVE
+        public void SaveAs()
+        {
+            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
+            {
+                saveFileDialog.Filter = "MtExpSolver Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
+                saveFileDialog.DefaultExt = "8Git";
+                saveFileDialog.AddExtension = true;
+
+                if (saveFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    tree.path = saveFileDialog.FileName;
+                    tree.SaveState();
+                }
+            }
+        }
+
+        // FILE OPEN
+        public void Open()
+        {
+            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
+            {
+                openFileDialog.Filter = "Text Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
+                openFileDialog.DefaultExt = "8Git";
+                openFileDialog.AddExtension = true;
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    tree.path = openFileDialog.FileName;
+                    tree.RestoreState();
+                }
+            }
+        }
+
+        /******************************************************************/
+
+        // EVENT TREEVIEW MOUSE DOWN
         public void treeView_MouseDown(object sender, MouseEventArgs e)
         {
             isDoubleClick = e.Clicks > 1;
@@ -131,7 +227,7 @@ namespace _8Git
              }*/
         }
 
-        // MOUSE
+        // EVENT TREEVIEW MOUSE MOVE
         public void treeView_MouseMove(object sender, MouseEventArgs e)
         {
             /*if (mouseDownPress)
@@ -153,7 +249,7 @@ namespace _8Git
             }*/
         }
 
-        // MOUSE
+        // EVENT TREEVIEW MOUSE UP
         public void treeView_MouseUp(object sender, MouseEventArgs e)
         {
             //mouseDownPress = false;
@@ -171,7 +267,7 @@ namespace _8Git
             }
         }
 
-        // MOUSE
+        // EVENT TREEVIEW MOUSE DOUBLE CLICK
         public void TreeView_NodeMouseDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             TreeData node = e.Node.Tag as TreeData;
@@ -179,13 +275,13 @@ namespace _8Git
             e.Node.Toggle();
         }
 
-        // KEYBOARD
+        // EVENT TREEVIEW KEY UP
         public void treeView_KeyUp(object sender, KeyEventArgs e)
         {
 
         }
 
-        // KEYBOARD
+        // EVENT TREEVIEW KEY DOWN
         public void treeView_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.F2 && treeView.SelectedNode != null)
@@ -202,7 +298,7 @@ namespace _8Git
             }
         }
 
-        // DRAG
+        // EVENT TREEVIEW DRAG START
         public void TreeView_ItemDrag(object sender, ItemDragEventArgs e)
         {
             if (!isInicialized) {
@@ -215,7 +311,7 @@ namespace _8Git
             DoDragDrop(e.Item, DragDropEffects.Move);
         }
 
-        // DRAG
+        // EVENT TREEVIEW DRAG ENTER
         public void TreeView_DragEnter(object sender, DragEventArgs e)
         {
             if (!isInicialized)
@@ -226,7 +322,7 @@ namespace _8Git
             e.Effect = DragDropEffects.All;
         }
 
-        // DRAG
+        // EVENT TREEVIEW DRAG OVER
         public void TreeView_DragOver(object sender, DragEventArgs e)
         {
             if (!isInicialized)
@@ -283,7 +379,7 @@ namespace _8Git
             g.Dispose();
         }
 
-        // DRAG
+        // EVENT TREEVIEW DRAG DROP
         public void TreeView_DragDrop(object sender, DragEventArgs e)
         {
             if (!isInicialized)
@@ -509,7 +605,7 @@ namespace _8Git
 
         }
 
-        // COLAPSE
+        // EVENT TREEVIEW EXPAND BEFORE
         public void treeView_BeforeExpand(object sender, TreeViewCancelEventArgs e)
         {
             TreeData note = e.Node.Tag as TreeData;
@@ -517,13 +613,13 @@ namespace _8Git
                 e.Cancel = true;
         }
 
-        // COLAPSE
+        // EVENT TREEVIEW EXPAND AFTER
         public void TreeView_AfterExpand(object sender, TreeViewEventArgs e)
         {
             Program.tree.ExpandNode(e.Node);
         }
 
-        // COLLAPSE
+        // EVENT TREEVIEW COLAPSE BEFORE
         public void treeView_BeforeCollapse(object sender, TreeViewCancelEventArgs e)
         {
             TreeData note = e.Node.Tag as TreeData;
@@ -531,13 +627,13 @@ namespace _8Git
                 e.Cancel = true;
         }
 
-        // COLAPSE
+        // EVENT TREEVIEW COLAPSE AFTER
         public void TreeView_AfterCollapse(object sender, TreeViewEventArgs e)
         {
             Program.tree.CollapseNode(e.Node);
         }
 
-        // RENAME
+        // EVENT TREEVIEW EDIT LABEL
         public void treeView_AfterLabelEdit(object sender, NodeLabelEditEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(e.Label))
@@ -553,58 +649,16 @@ namespace _8Git
             tree.updated = true;
         }
 
-        // RESIZE
-        public void Form8Git_Resize(object sender, EventArgs e)
+        /******************************************************************/
+
+        // TIMER
+        public void timer_Tick(object sender, EventArgs e)
         {
-            if (isPositionSet)
+            tick++;
+
+            if (tree.updated && (tick - lastSaveTick) > 120)
             {
-                if (this.WindowState == FormWindowState.Maximized ||
-                    this.WindowState == FormWindowState.Minimized)
-                {
-                    return;
-                }
-
-                FormX = this.Left;
-                FormY = this.Top;
-                FormW = this.Width;
-                FormH = this.Height;
-            }
-        }
-
-        // MOVE
-        public void Form8Git_Move(object sender, EventArgs e)
-        {
-            if (isPositionSet)
-            {
-                if (this.WindowState == FormWindowState.Maximized ||
-                this.WindowState == FormWindowState.Minimized)
-                {
-                    return;
-                }
-
-                FormX = this.Left;
-                FormY = this.Top;
-                FormW = this.Width;
-                FormH = this.Height;
-            }
-        }
-
-        // FORM VISIBILITY
-        public void Form8Git_VisibleChanged(object sender, EventArgs e)
-        {
-            if (isPositionSet)
-            {
-                this.FormVisible = this.Visible;
-            }
-        }
-
-        // CLOSING
-        public void Form8Git_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            if (e.CloseReason == CloseReason.UserClosing)
-            {
-                e.Cancel = true;
-                this.Hide();
+                tree.SaveState();
             }
         }
 
@@ -679,73 +733,7 @@ namespace _8Git
             CreateContextmenuItem("/Exit", (s, e) => CloseApplication(), Icons.CreateUnicodeImage("✖", "#FF0000", "", 32));
         }
 
-        // CONTEXTMENU
-        public ToolStripMenuItem CreateContextmenuItem(string path, EventHandler onclick = null, System.Drawing.Image icon = null)
-        {
-            string parent = path.Substring(0, path.LastIndexOf('/'));
-            string child = path;
-            string name = path.Substring(path.LastIndexOf('/') + 1);
-
-            if (name == "-")
-            {
-
-                var separator = new ToolStripSeparator();
-
-                if (parent == "")
-                {
-                    contextMenu.Items.Add(separator);
-                }
-                else
-                {
-                    contextMenuItems[parent].DropDownItems.Add(separator);
-                }
-                return null;
-            }
-
-            if (parent != "" && !contextMenuItems.ContainsKey(parent))
-            {
-                return null;
-            }
-
-            if (contextMenuItems.ContainsKey(child))
-            {
-                return null;
-            }
-
-            contextMenuItems[child] = new ToolStripMenuItem(name, icon, onclick);
-
-            if (parent == "")
-            {
-                contextMenu.Items.Add(contextMenuItems[child]);
-            }
-            else
-            {
-                contextMenuItems[parent].DropDownItems.Add(contextMenuItems[child]);
-            }
-
-            return contextMenuItems[child];
-        }
-
-
-        public bool IsAutoRunEnabled()
-        {
-            string exePath = Process.GetCurrentProcess().MainModule.FileName;
-            string expectedValue = $"\"{exePath}\" --start-minimalized";
-
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", false))
-            {
-                if (key == null)
-                    return false;
-
-                object value = key.GetValue("8Git");
-                if (value == null)
-                    return false;
-
-                return value.ToString().Equals(expectedValue, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-
-        // CONTEXTMENU
+        // CONTEXTMENU OPENING
         public void contextMenu_Opening(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (treeView.SelectedNode == null)
@@ -803,9 +791,56 @@ namespace _8Git
             }
         }
 
+        // CONTEXTMENU CREATE ITEM
+        public ToolStripMenuItem CreateContextmenuItem(string path, EventHandler onclick = null, System.Drawing.Image icon = null)
+        {
+            string parent = path.Substring(0, path.LastIndexOf('/'));
+            string child = path;
+            string name = path.Substring(path.LastIndexOf('/') + 1);
+
+            if (name == "-")
+            {
+
+                var separator = new ToolStripSeparator();
+
+                if (parent == "")
+                {
+                    contextMenu.Items.Add(separator);
+                }
+                else
+                {
+                    contextMenuItems[parent].DropDownItems.Add(separator);
+                }
+                return null;
+            }
+
+            if (parent != "" && !contextMenuItems.ContainsKey(parent))
+            {
+                return null;
+            }
+
+            if (contextMenuItems.ContainsKey(child))
+            {
+                return null;
+            }
+
+            contextMenuItems[child] = new ToolStripMenuItem(name, icon, onclick);
+
+            if (parent == "")
+            {
+                contextMenu.Items.Add(contextMenuItems[child]);
+            }
+            else
+            {
+                contextMenuItems[parent].DropDownItems.Add(contextMenuItems[child]);
+            }
+
+            return contextMenuItems[child];
+        }
 
         /******************************************************************/
 
+        // NODE COMMAND OPEN GIT
         public void GitCommand(string command)
         {
             TreeData node = Program.tree.GetSelectedNode();
@@ -818,7 +853,7 @@ namespace _8Git
             Command.OpenTortoiseGit(node.path, command, true);
         }
 
-        // NODE
+        // NODE OPEN
         public void OpenNode()
         {
             if (treeView.SelectedNode != null)
@@ -828,7 +863,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE EDIT
         public void EditNode()
         {
             if (treeView.SelectedNode != null)
@@ -838,7 +873,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE CREATE FOLDER
         public void CreateFolder()
         {
             if (Program.tree.CreateFolder() != null)
@@ -847,7 +882,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE CREATE NOTE
         public void CreateNote()
         {
             if (Program.tree.CreateNote() != null)
@@ -856,7 +891,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE CREATE COMMAND
         public void CreateCommand()
         {
             if (Program.tree.CreateCommand() != null)
@@ -865,7 +900,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE RENAME
         public void RenameNode()
         {
             if (treeView.SelectedNode != null)
@@ -875,7 +910,7 @@ namespace _8Git
             }
         }
 
-        // NODE
+        // NODE DELETE
         public void DeleteNode()
         {
             if (treeView.SelectedNode != null)
@@ -886,53 +921,7 @@ namespace _8Git
 
         }
 
-        // SAVE
-        public void Save()
-        {
-
-            if (tree.path == "")
-            {
-                this.SaveAs();
-            }
-            else
-            {
-                tree.SaveState();
-            }
-        }
-
-        // SAVE
-        public void SaveAs()
-        {
-            using (var saveFileDialog = new System.Windows.Forms.SaveFileDialog())
-            {
-                saveFileDialog.Filter = "MtExpSolver Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
-                saveFileDialog.DefaultExt = "8Git";
-                saveFileDialog.AddExtension = true;
-
-                if (saveFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    tree.path = saveFileDialog.FileName;
-                    tree.SaveState();
-                }
-            }
-        }
-
-        // OPEN
-        public void Open()
-        {
-            using (var openFileDialog = new System.Windows.Forms.OpenFileDialog())
-            {
-                openFileDialog.Filter = "Text Files (*.8Git)|*.8Git|All Files (*.*)|*.*";
-                openFileDialog.DefaultExt = "8Git";
-                openFileDialog.AddExtension = true;
-
-                if (openFileDialog.ShowDialog() == DialogResult.OK)
-                {
-                    tree.path = openFileDialog.FileName;
-                    tree.RestoreState();
-                }
-            }
-        }
+        /******************************************************************/
 
         // CONTEXTMENU
         public void OpenTerminal()
@@ -988,6 +977,25 @@ namespace _8Git
             contextMenuItems["/Options/Most top"].Checked = this.TopMost;
         }
 
+        // TOOLS AUTORUN
+        public bool IsAutoRunEnabled()
+        {
+            string exePath = Process.GetCurrentProcess().MainModule.FileName;
+            string expectedValue = $"\"{exePath}\" --start-minimalized";
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", false))
+            {
+                if (key == null)
+                    return false;
+
+                object value = key.GetValue("8Git");
+                if (value == null)
+                    return false;
+
+                return value.ToString().Equals(expectedValue, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         // CONTEXTMENU Autorun
         public void SetAutorun()
         {
@@ -1014,6 +1022,7 @@ namespace _8Git
             Program.clossingApplication = true;
             System.Windows.Forms.Application.Exit();
         }
+
 
         /******************************************************************/
 
