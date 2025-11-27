@@ -15,6 +15,31 @@ function Copy-WithFullPath {
     # Copy the file and overwrite if necessary
     Copy-Item -Path $Source -Destination $Destination -Force
 }
+########################################
+
+function New-SHA256Checksum {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string]$FilePath
+    )
+
+    if (-not (Test-Path -Path $FilePath -PathType Leaf)) {
+        throw "Súbor nenájdený: $FilePath"
+    }
+
+    $h = Get-FileHash -Path $FilePath -Algorithm SHA256
+    $hex = $h.Hash.ToLower()
+
+    $fileName = [System.IO.Path]::GetFileName($FilePath)
+
+    $outPath = "$FilePath.SHA256"
+
+    $line = "{0}  {1}" -f $hex, $fileName
+
+    $line | Out-File -FilePath $outPath -Encoding Ascii -Force
+
+    return $outPath
+}
 
 ########################################
 
@@ -78,8 +103,7 @@ foreach ($file in $exeFiles) {
     Write-Output "################## SUBSCRIBE VERIFY"
     & $signtoolPath verify /pa /v "$TARGET"
     Write-Output "################## CREATE PACKAGE HASH"
-    $hash = Get-FileHash -Path $TARGET -Algorithm SHA256
-    $hash.Hash | Out-File -FilePath "$TARGET.SHA256"
+    New-SHA256Checksum -FilePath $TARGET
 }
 
 Read-Host "Press Enter to continue"
