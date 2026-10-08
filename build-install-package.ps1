@@ -59,6 +59,9 @@ Write-Host "CERT_CODE=>$CERT_CODE<"
 $CERT_PWD = $env:CERT_PWD
 Write-Host "CERT_PWD=>$CERT_PWD<"
 
+$PASSWORD = (& Get-DecryptedSecret.ps1 -FilePath $CERT_PWD -ErrorAction SilentlyContinue) ?? ""
+#Write-Host "PASSWORD=>$PASSWORD<"
+
 $CERT_PUBLISHER = $env:CERT_PUBLISHER
 Write-Host "CERT_PUBLISHER=>$CERT_PUBLISHER<"
 
@@ -78,7 +81,7 @@ foreach ($path in $paths) {
         Write-Output "################## STRONG NAME VERIFY"
         #& $snPath -v "$path"
         Write-Output "################## SUBSCRIBE"
-        & $signtoolPath sign /fd SHA256 /f "$CERT_CODE" /p $CERT_PWD /tr http://timestamp.digicert.com /td sha256 /v "$path"
+        & $signtoolPath sign /fd SHA256 /f "$CERT_CODE" /p $PASSWORD /tr http://timestamp.digicert.com /td sha256 /v "$path"
         Write-Output "################## SUBSCRIBE VERIFY"
 		& $signtoolPath verify /pa /v "$path"
     } else {
@@ -99,7 +102,7 @@ $exeFiles = Get-ChildItem -Path Output -Filter *.exe -Recurse -File
 foreach ($file in $exeFiles) {        
     $TARGET=$file.FullName
     Write-Output "################## SUBSCRIBE PACKAGE $TARGET"
-    & $signtoolPath sign /fd SHA256 /f "$CERT_CODE" /p $CERT_PWD /tr http://timestamp.digicert.com /td sha256 /v "$TARGET"
+    & $signtoolPath sign /fd SHA256 /f "$CERT_CODE" /p $PASSWORD /tr http://timestamp.digicert.com /td sha256 /v "$TARGET"
     Write-Output "################## SUBSCRIBE VERIFY"
     & $signtoolPath verify /pa /v "$TARGET"
     Write-Output "################## CREATE PACKAGE HASH"
