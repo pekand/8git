@@ -981,7 +981,7 @@ namespace _8Git
         public bool IsAutoRunEnabled()
         {
             string exePath = Process.GetCurrentProcess().MainModule.FileName;
-            string expectedValue = $"\"{exePath}\" --start-minimalized";
+            string expectedValue = $"\"{exePath}\" " + Program.StartMinimizedParameter;
 
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(@"Software\Microsoft\Windows\CurrentVersion\Run", false))
             {
@@ -1001,7 +1001,7 @@ namespace _8Git
         {
             string appName = "8Git"; // change as needed
             string exePath = Process.GetCurrentProcess().MainModule.FileName;
-            string value = $"\"{exePath}\" --start-minimalized";
+            string value = $"\"{exePath}\" " + Program.StartMinimizedParameter;
 
             using (RegistryKey key = Registry.CurrentUser.OpenSubKey(
                        @"Software\Microsoft\Windows\CurrentVersion\Run", true))

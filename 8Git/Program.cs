@@ -29,6 +29,8 @@ namespace _8Git
 
         public static bool clossingApplication = false;
 
+        public const string StartMinimizedParameter = "--start-minimalized";
+
 #if DEBUG
         [DllImport("kernel32.dll")]
         static extern bool AllocConsole();
@@ -114,7 +116,7 @@ namespace _8Git
 
             if (args.Length == 0)
             {
-                appArgs = new[] { "--start-minimalized"};
+                appArgs = new[] { Program.StartMinimizedParameter };
             }
 #endif
 
@@ -140,7 +142,7 @@ namespace _8Git
             {
                 foreach (var arg in appArgs)
                 {
-                    if (arg == "--start-minimalized") {
+                    if (arg == Program.StartMinimizedParameter) {
                         startminimalized = true;
                     } else 
                     if (Directory.Exists(arg))
